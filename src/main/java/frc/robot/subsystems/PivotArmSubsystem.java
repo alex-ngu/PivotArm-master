@@ -5,7 +5,6 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-//import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -18,15 +17,12 @@ public class PivotArmSubsystem extends SubsystemBase{ // Pivot Arm Subsystem
     ///////////////// 
    //  Variables  //
   /////////////////
-    //private final WPI_TalonSRX talon =  new WPI_TalonSRX(5);
     private final CANSparkMax canspark = new CANSparkMax(14, MotorType.kBrushless);
     private final DigitalInput limitSwitch = new DigitalInput(2);
-    //private final DigitalInput encoder = new DigitalInput(5);
-    //private final SingleChannelEncoder sEnc = new SingleChannelEncoder(talon, encoder);
     private final RelativeEncoder rEnc;
     private final PIDController pid = new PIDController(0.07, 0, 0);
     private double before;
-    private double setpoint = 0;
+    private double setpoint;
     private boolean pidOn = true;
     private double manualSpeed = 0;
 
@@ -41,6 +37,9 @@ public class PivotArmSubsystem extends SubsystemBase{ // Pivot Arm Subsystem
       public boolean isPIDOn(){
         return pidOn;
       }
+      public void newSetpoint(double setpoint){
+        this.setpoint = setpoint;
+    }
     
     /////////////////////////////////////////
    ///  Pivot Arm Subsystem Constructor  ///
@@ -49,6 +48,7 @@ public class PivotArmSubsystem extends SubsystemBase{ // Pivot Arm Subsystem
         canspark.setIdleMode(IdleMode.kBrake);
         canspark.setInverted(true);
         rEnc = canspark.getEncoder();
+        setpoint = rEnc.getPosition();
     }
 
     /////////////////////////
@@ -137,11 +137,11 @@ public class PivotArmSubsystem extends SubsystemBase{ // Pivot Arm Subsystem
         if(pid.atSetpoint()){ // If the PID is at the setpoint, return a value of 0
             return 0;
         }
-        if(error > 0.5){ // If the error is greater than a limit of 0.5, return a value of 0.5
-            return 0.5;
+        if(error > 0.6){ // If the error is greater than a limit of 0.5, return a value of 0.5
+            return 0.6;
         }
-        else if(error < -0.5){ // If the error is less than a limit of -0.5, return a value of -0.5
-            return -0.5;
+        else if(error < -0.4){ // If the error is less than a limit of -0.5, return a value of -0.5
+            return -0.4;
         }
         else{ // If everything else fails, return the error 
             return error;
@@ -170,9 +170,7 @@ public class PivotArmSubsystem extends SubsystemBase{ // Pivot Arm Subsystem
     
 
 
-    public void newSetpoint(double setpoint){
-        this.setpoint = setpoint;
-    }
+  
     
     ////////////////////////
    ///  Printing Method ///
@@ -198,7 +196,7 @@ public class PivotArmSubsystem extends SubsystemBase{ // Pivot Arm Subsystem
           calcSpeed = .5;
         }
         else if(calcSpeed < -0.3){ 
-          calcSpeed = -0.2;
+          calcSpeed = -0.3;
         }
         canspark.set(calcSpeed);
 

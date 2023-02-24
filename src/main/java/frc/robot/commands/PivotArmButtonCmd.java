@@ -3,7 +3,6 @@ package frc.robot.commands;
 import frc.robot.subsystems.PivotArmSubsystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class PivotArmButtonCmd extends CommandBase{ // Pivot Arm Button Command
     private double speed;

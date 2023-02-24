@@ -9,7 +9,7 @@ public class LowPosition extends CommandBase {
   double setPoint;
   public LowPosition(ElevatorSubsystem elevSubystem) {
     elevSub = elevSubystem;
-    setPoint = -7;
+    setPoint = 6;
     addRequirements(elevSub);
   }
 

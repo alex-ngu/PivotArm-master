@@ -5,9 +5,11 @@ import frc.robot.subsystems.PivotArmSubsystem;
 
 public class TuckedIn extends CommandBase{
     private PivotArmSubsystem p_subs;
+    private int setpoint;
 
     public TuckedIn(PivotArmSubsystem subs){
         p_subs = subs;
+        setpoint = 0;
         addRequirements(subs);
     }
 
@@ -18,20 +20,16 @@ public class TuckedIn extends CommandBase{
     @Override
     public void execute(){
         if(!p_subs.isTucked()){
-        p_subs.resetEncoder();
-        p_subs.newSetpoint(0);
+        p_subs.newSetpoint(p_subs.getEncoder());
         }
         else{
-            p_subs.disablePid();
-            p_subs.setManualSpeed(-.2);
+            p_subs.newSetpoint(setpoint);
            
         }
     }
 
     @Override
     public void end(boolean interrupted){
-        p_subs.setManualSpeed(0);
-        p_subs.enablePid();
     }
     
     @Override
