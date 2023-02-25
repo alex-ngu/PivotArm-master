@@ -112,7 +112,9 @@ public class PivotArmSubsystem extends SubsystemBase{ // Pivot Arm Subsystem
     }
 
     public boolean isAtSetPoint(){
-        return pid.atSetpoint();
+        double error = setpoint - rEnc.getPosition();
+
+        return Math.abs(error) < 5;
     }
     public void setManualSpeed(double inputSpeed){
         manualSpeed = inputSpeed;

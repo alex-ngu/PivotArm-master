@@ -1,11 +1,13 @@
 package frc.robot;
  
 
+import frc.robot.commands.HighPosition;
+import frc.robot.commands.LowPosition;
 import frc.robot.commands.MidPosition;
 import frc.robot.commands.PivotArmButtonCmd;
 import frc.robot.commands.PivotHighCmd;
 import frc.robot.commands.PivotLowCmd;
-import frc.robot.commands.TopNodeCaseStatement;
+import frc.robot.commands.TopNode;
 import frc.robot.commands.TuckedIn;
 import frc.robot.commands.ZeroPosition;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -33,8 +35,8 @@ public class RobotContainer {
   private void configureBindings() {
     new JoystickButton(xController, 1).onTrue(new PivotHighCmd(p_subsystem));
     new JoystickButton(xController, 2).onTrue(tucked); // Button for the starting position
-    new JoystickButton(xController, 3).onTrue(new TopNodeCaseStatement(p_subsystem, elevator)); // Button for the middle position
-    new JoystickButton(xController, 4).onTrue(new PivotLowCmd(p_subsystem)); // Button for the high position
+    new JoystickButton(xController, 3).onTrue(new SequentialCommandGroup(new TopNode(p_subsystem, elevator))); // Button for the middle position
+    new JoystickButton(xController, 4).onTrue(new SequentialCommandGroup(new MidPosition(elevator), new PivotLowCmd(p_subsystem), new LowPosition(elevator))); // Button for the high position
     new JoystickButton(xController, 5).onTrue(new MidPosition(elevator)); 
     new JoystickButton(xController, 6).onTrue(new ZeroPosition(elevator)); // Button for driving the motor using the joystick
     new JoystickButton(xController, 7).whileTrue(new PivotArmButtonCmd(p_subsystem, .3));
