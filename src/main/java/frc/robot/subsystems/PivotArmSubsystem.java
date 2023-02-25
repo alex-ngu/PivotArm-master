@@ -22,11 +22,24 @@ public class PivotArmSubsystem extends SubsystemBase{ // Pivot Arm Subsystem
     private final RelativeEncoder rEnc;
     private final PIDController pid = new PIDController(0.07, 0, 0);
     private double before;
-    private double setpoint;
+    private double setpoint = 0;
     private boolean pidOn = true;
     private double manualSpeed = 0;
+    private double encoderValue;
 
 
+    
+    /////////////////////////////////////////
+   ///  Pivot Arm Subsystem Constructor  ///
+  /////////////////////////////////////////
+    public PivotArmSubsystem(){ // Instantiates the Talon Encoder variable and sets the tolerance for the PID
+        canspark.setIdleMode(IdleMode.kBrake);
+        canspark.setInverted(true);
+        rEnc = canspark.getEncoder();
+        setpoint = rEnc.getPosition();
+    }
+
+    
     public void enablePid(){
         pidOn = true; 
       }
@@ -40,17 +53,6 @@ public class PivotArmSubsystem extends SubsystemBase{ // Pivot Arm Subsystem
       public void newSetpoint(double setpoint){
         this.setpoint = setpoint;
     }
-    
-    /////////////////////////////////////////
-   ///  Pivot Arm Subsystem Constructor  ///
-  /////////////////////////////////////////
-    public PivotArmSubsystem(){ // Instantiates the Talon Encoder variable and sets the tolerance for the PID
-        canspark.setIdleMode(IdleMode.kBrake);
-        canspark.setInverted(true);
-        rEnc = canspark.getEncoder();
-        setpoint = rEnc.getPosition();
-    }
-
     /////////////////////////
    ///  Encoder Methods  ///
   /////////////////////////
@@ -177,7 +179,7 @@ public class PivotArmSubsystem extends SubsystemBase{ // Pivot Arm Subsystem
   ////////////////////////
   
     public void periodic(){
-        double encoderValue = getEncoder();
+        encoderValue = getEncoder();
         compareErrors();
         double calcSpeed = 0;
       

@@ -29,7 +29,11 @@ public class ElevatorSubsystem extends SubsystemBase {
     elevator = new CANSparkMax(OperatorConstants.ELEVATOR_ID, MotorType.kBrushless);
     enc = elevator.getEncoder();
     setpoint = enc.getPosition();
-    pid.setTolerance(1);
+    pid.setTolerance(.05);
+  }
+
+  public void zeroEncoder(){
+    
   }
 
   public double getEncoder(){
@@ -92,6 +96,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
   } */
 
+  public double getError(){
+    return pid.getPositionError();
+  }
+
   @Override
   public void periodic() {
     double encoderValue = enc.getPosition(); // GETS CURRENT ENC VALUE OF ELEVATOR
@@ -125,5 +133,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("Bottom switch pressed", bottomPressed());
     SmartDashboard.putNumber("encoder counts", encoderValue);
     SmartDashboard.putNumber("Setpoint", setpoint);
+    SmartDashboard.putNumber("error", getError());
+    SmartDashboard.putNumber("tolerance", pid.getPositionTolerance());
   }
 }

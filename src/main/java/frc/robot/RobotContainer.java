@@ -1,29 +1,23 @@
 package frc.robot;
+ 
 
-import frc.robot.commands.ArmSafetyPosition;  
-import frc.robot.commands.HighPosition;
-import frc.robot.commands.LowPosition;
-import frc.robot.commands.ManualElevatorDrive;
 import frc.robot.commands.MidPosition;
 import frc.robot.commands.PivotArmButtonCmd;
-import frc.robot.commands.PivotMiddleCmd;
 import frc.robot.commands.PivotHighCmd;
 import frc.robot.commands.PivotLowCmd;
-import frc.robot.commands.MidNode;
-import frc.robot.commands.TopNode;
+import frc.robot.commands.TopNodeCaseStatement;
 import frc.robot.commands.TuckedIn;
 import frc.robot.commands.ZeroPosition;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.PivotArmSubsystem;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class RobotContainer {
   private final PivotArmSubsystem p_subsystem = new PivotArmSubsystem(); 
   private final ElevatorSubsystem elevator = new ElevatorSubsystem();
-  private final ArmSafetyPosition arm = new ArmSafetyPosition(elevator);
   private final TuckedIn tucked = new TuckedIn(p_subsystem);
 
   //private final Joystick joystick1 = new Joystick(0);
@@ -39,7 +33,7 @@ public class RobotContainer {
   private void configureBindings() {
     new JoystickButton(xController, 1).onTrue(new PivotHighCmd(p_subsystem));
     new JoystickButton(xController, 2).onTrue(tucked); // Button for the starting position
-    new JoystickButton(xController, 3).onTrue(new LowPosition(elevator)); // Button for the middle position
+    new JoystickButton(xController, 3).onTrue(new TopNodeCaseStatement(p_subsystem, elevator)); // Button for the middle position
     new JoystickButton(xController, 4).onTrue(new PivotLowCmd(p_subsystem)); // Button for the high position
     new JoystickButton(xController, 5).onTrue(new MidPosition(elevator)); 
     new JoystickButton(xController, 6).onTrue(new ZeroPosition(elevator)); // Button for driving the motor using the joystick
@@ -49,7 +43,7 @@ public class RobotContainer {
 
   
 
-  public Command getAutonomousCommand() {
+  public Command getAutonomosCommand() {
     return null;
   }
 }

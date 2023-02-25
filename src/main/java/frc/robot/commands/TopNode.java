@@ -16,6 +16,6 @@ public class TopNode extends SequentialCommandGroup {
   public TopNode(PivotArmSubsystem pivotsub, ElevatorSubsystem elevsub) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new HighPosition(elevsub).andThen(new PivotHighCmd(pivotsub)));
+    addCommands(new HighPosition(elevsub),(new PivotHighCmd(pivotsub)));
   }
 }
