@@ -11,11 +11,11 @@ import frc.robot.subsystems.PivotArmSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class LowPickup extends SequentialCommandGroup {
+public class TuckedFromBottom extends SequentialCommandGroup {
   /** Creates a new TuckedFromBottom. */
-  public LowPickup(PivotArmSubsystem pivotSub, ElevatorSubsystem elevSub) {
+  public TuckedFromBottom(PivotArmSubsystem pivotSub, ElevatorSubsystem elevSub) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new MidPosition(elevSub), new PivotLowCmd(pivotSub), new LowPosition(elevSub));
+    addCommands(new MidPosition(elevSub), new TuckedIn(pivotSub));
   }
 }

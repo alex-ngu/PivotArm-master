@@ -9,7 +9,7 @@ public class HighPosition extends CommandBase {
   double setPoint;
   public HighPosition(ElevatorSubsystem elevSubystem) {
     elevSub = elevSubystem;
-    setPoint = 190;
+    setPoint = 180;
     addRequirements(elevSub);
   }
 
