@@ -16,7 +16,9 @@ import frc.robot.commands.ZeroPosition;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.PivotArmSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -40,10 +42,14 @@ public class RobotContainer {
     new JoystickButton(xController, 2).onTrue(new TuckedFromBottom(p_subsystem, elevator));
     new JoystickButton(xController, 3).onTrue(new TopNode(p_subsystem, elevator)); // Button for the middle position
     new JoystickButton(xController, 4).onTrue(new TuckedFromTop(p_subsystem, elevator)); // Button for the high position
-    new JoystickButton(xController, 5).onTrue(new MidPosition(elevator)); 
-    new JoystickButton(xController, 6).onTrue(new ZeroPosition(elevator)); // Button for driving the motor using the joystick
-    new JoystickButton(xController, 7).whileTrue(new PivotArmButtonCmd(p_subsystem, .3));
-    new JoystickButton(xController, 8).whileTrue(new PivotArmButtonCmd(p_subsystem, -.3));
+    new JoystickButton(xController, 5).onTrue(new ProxyCommand(() -> {
+      SmartDashboard.putNumber("Select command", elevator.getEncoder());
+      if (elevator.getEncoder() < 160) {
+        return new TuckedFromBottom(p_subsystem, elevator);
+      } else {
+        return new TuckedFromTop(p_subsystem, elevator);
+      }}
+    ));
   }
 
   
