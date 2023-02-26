@@ -15,6 +15,7 @@ import frc.robot.commands.TuckedIn;
 import frc.robot.commands.ZeroPosition;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.PivotArmSubsystem;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -39,9 +40,9 @@ public class RobotContainer {
 
   private void configureBindings() {
     new JoystickButton(xController, 1).onTrue(new LowPickup(p_subsystem, elevator));
-    new JoystickButton(xController, 2).onTrue(new TuckedFromBottom(p_subsystem, elevator));
-    new JoystickButton(xController, 3).onTrue(new TopNode(p_subsystem, elevator)); // Button for the middle position
-    new JoystickButton(xController, 4).onTrue(new TuckedFromTop(p_subsystem, elevator)); // Button for the high position
+    new JoystickButton(xController, 2).onTrue(new MidPosition(elevator));
+    new JoystickButton(xController, 3).onTrue(new PivotHighCmd(p_subsystem)); // Button for the middle position
+    new JoystickButton(xController, 4).onTrue(new TopNode(p_subsystem, elevator));
     new JoystickButton(xController, 5).onTrue(Tucked.getCommand(p_subsystem, elevator));
   }
 

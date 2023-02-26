@@ -9,7 +9,7 @@ public class MidPosition extends CommandBase {
   double setPoint;
   public MidPosition(ElevatorSubsystem elevSubystem) {
     elevSub = elevSubystem;
-    setPoint = 120;
+    setPoint = 100;
     addRequirements(elevSub);
   }
 
