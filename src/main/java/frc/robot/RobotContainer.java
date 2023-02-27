@@ -8,6 +8,7 @@ import frc.robot.commands.MidPosition;
 import frc.robot.commands.PivotArmButtonCmd;
 import frc.robot.commands.PivotHighCmd;
 import frc.robot.commands.PivotLowCmd;
+import frc.robot.commands.PivotMiddleCmd;
 import frc.robot.commands.TopNode;
 import frc.robot.commands.TuckedFromBottom;
 import frc.robot.commands.TuckedFromTop;
@@ -19,6 +20,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -40,10 +42,14 @@ public class RobotContainer {
 
   private void configureBindings() {
     new JoystickButton(xController, 1).onTrue(new LowPickup(p_subsystem, elevator));
-    new JoystickButton(xController, 2).onTrue(new MidPosition(elevator));
-    new JoystickButton(xController, 3).onTrue(new PivotHighCmd(p_subsystem)); // Button for the middle position
+    new JoystickButton(xController, 2).onTrue(new ParallelCommandGroup(new MidPosition(elevator), new PivotMiddleCmd(p_subsystem)));
+    new JoystickButton(xController, 2).onTrue(new TuckedIn(p_subsystem));
+   // new JoystickButton(xController, 3).onTrue(new PivotHighCmd(p_subsystem)); // Button for the middle position
+    //new JoystickButton(xController, 4).onTrue(new PivotLowCmd(p_subsystem));
     new JoystickButton(xController, 4).onTrue(new TopNode(p_subsystem, elevator));
     new JoystickButton(xController, 5).onTrue(Tucked.getCommand(p_subsystem, elevator));
+    new JoystickButton(xController, 7).whileTrue(new PivotArmButtonCmd(p_subsystem, .2));
+    new JoystickButton(xController, 8).whileTrue(new PivotArmButtonCmd(p_subsystem, -.2));
   }
 
   

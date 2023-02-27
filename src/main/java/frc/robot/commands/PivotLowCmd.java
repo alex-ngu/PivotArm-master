@@ -19,7 +19,7 @@ public class PivotLowCmd extends CommandBase{
     @Override
     public void execute(){
         SmartDashboard.putNumber("Pivot Encoder: ", p_subs.getEncoder());
-        p_subs.newSetpoint(63);
+        p_subs.newSetpoint(45);
     }
 
     @Override

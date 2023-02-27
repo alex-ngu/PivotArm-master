@@ -22,7 +22,7 @@ public class PivotArmSubsystem extends SubsystemBase{ // Pivot Arm Subsystem
     private final RelativeEncoder rEnc;
     private final PIDController pid = new PIDController(0.1, 0, 0);
     private double before;
-    private double setpoint = 0;
+    private double setpoint;
     private boolean pidOn = true;
     private double manualSpeed = 0;
     private double encoderValue;
@@ -144,8 +144,8 @@ public class PivotArmSubsystem extends SubsystemBase{ // Pivot Arm Subsystem
         if(error > 1){ // If the error is greater than a limit of 0.5, return a value of 0.5
             return 1;
         }
-        else if(error < -1){ // If the error is less than a limit of -0.5, return a value of -0.5
-            return -1;
+        else if(error < -.9){ // If the error is less than a limit of -0.5, return a value of -0.5
+            return -.9;
         }
         else{ // If everything else fails, return the error 
             return error;
