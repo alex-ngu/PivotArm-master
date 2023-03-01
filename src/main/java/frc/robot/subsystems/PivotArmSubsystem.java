@@ -128,8 +128,8 @@ public class PivotArmSubsystem extends SubsystemBase{ // Pivot Arm Subsystem
         
         
         
-        if(calcSpeed > .6){ 
-          calcSpeed = .6;
+        if(calcSpeed > .7){ 
+          calcSpeed = .7;
         }
         else if(calcSpeed < -0.4){ 
           calcSpeed = -0.4;
