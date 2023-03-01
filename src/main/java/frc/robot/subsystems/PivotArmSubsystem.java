@@ -57,55 +57,16 @@ public class PivotArmSubsystem extends SubsystemBase{ // Pivot Arm Subsystem
    ///  Encoder Methods  ///
   /////////////////////////
     public double getEncoder(){ // Return the Encoder Value
-        //return right.getSensorCollection().getQuadraturePosition();
-        //return sEnc.get();
         return rEnc.getPosition();
     }
 
     public void resetEncoder(){ // Resets the Encoder to a Position of 0
-        //right.getSensorCollection().setQuadraturePosition(0, 5);
-        //sEnc.reset();
         rEnc.setPosition(0);
     }
-    public void currentEncValtoSetpoint(){
+    public void currentEncValtoSetpoint(){ //Change the current encoder count to the setpoint, so that the pid stays
         setpoint = getEncoder();
       }
 
-    /////////////////////////////////
-   ///  Set Pivot Speed Methods  ///
-  /////////////////////////////////
-    public void pivotUp(DoubleSupplier speed){ // Pivots the arm up based on its speed
-        canspark.set(pivotDeadZone(speed.getAsDouble()));
-     }
-
-    public void pivotArm(double speed){ // Pivots the arm based on its speed
-        //right.set(ControlMode.PercentOutput, speed);
-        //talon.set(speed);
-        canspark.set(speed);
-    }
-
-    public void pivotStop(){ // Stops the Pivot Arm Motor 
-        canspark.stopMotor();
-    }
-
-    public double pivotDeadZone(double speed){ // Sets a deadzone for the Pivot Arm when moved by a joystick
-        if(Math.abs(speed) < 0.1){ // If the absolute value of the speed is less than 0.1, return a speed of 0
-            return 0;
-        }
-        else{ // If everything else fails, return the speed
-            return speed;
-        }
-    }
-
-    public void limitPress(){ // Returns whether the limit is pressed or not
-        if(limitSwitch.get()){ // If the limit switch is not pressed, runs the PID to 0
-            canspark.set(pidOutput(0));
-            compareErrors();
-        }
-        else{ // If the limit switch is pressed, stop the pivot arm and reset the encoders
-            pivotStop();
-        }
-    }
                 
     public boolean isTucked(){ // Returns if the limit switch is pressed or not
         return limitSwitch.get();
@@ -114,7 +75,7 @@ public class PivotArmSubsystem extends SubsystemBase{ // Pivot Arm Subsystem
     public boolean isAtSetPoint(){
         double error = setpoint - rEnc.getPosition();
 
-        return Math.abs(error) < 5;
+        return Math.abs(error) < 3;
     }
     public void setManualSpeed(double inputSpeed){
         manualSpeed = inputSpeed;
@@ -136,42 +97,14 @@ public class PivotArmSubsystem extends SubsystemBase{ // Pivot Arm Subsystem
         before = pid.getPositionError(); 
     }
 
-    public double pidOutput(double setpoint){ // Calculates the value of the Porportional Term by multiplying the error (setpoint - encoder) by the kP constantSets the limit of the error
-        double error = pid.calculate(getEncoder(), setpoint);
-        if(pid.atSetpoint()){ // If the PID is at the setpoint, return a value of 0
-            return 0;
-        }
-        if(error > 1){ // If the error is greater than a limit of 0.5, return a value of 0.5
-            return 1;
-        }
-        else if(error < -.9){ // If the error is less than a limit of -0.5, return a value of -0.5
-            return -.9;
-        }
-        else{ // If everything else fails, return the error 
-            return error;
-        }
+
+    public void smartdashboard(){
+        SmartDashboard.putNumber("[P] Encoder: ", getEncoder());
+        SmartDashboard.putBoolean("[P] Limit Switch: ", limitSwitch.get());
+        SmartDashboard.putNumber("[P] setpoint PIVOT", setpoint );
+        SmartDashboard.putBoolean("[P] pid", isPIDOn());
     }
 
-    public void forceStop(double speed){
-        if(limitSwitch.get() && speed != 0){
-            speed = 0;
-        }
-    }
-
-    /*public void pivotArmPID(double setpoint){ // Outputs the PID speed to the motors
-        double e = pid.calculate(getEncoder(), setpoint);
-        SmartDashboard.putNumber("Error: ", e);
-        forceStop(e);
-        if(pidOn){
-            canspark.set(pidOutput(setpoint));
-        }
-        else{
-            manualSpeed;
-            
-        }
-        compareErrors();
-    }*/
-    
 
 
   
@@ -181,6 +114,7 @@ public class PivotArmSubsystem extends SubsystemBase{ // Pivot Arm Subsystem
   ////////////////////////
   
     public void periodic(){
+        smartdashboard();
         encoderValue = getEncoder();
         compareErrors();
         double calcSpeed = 0;
@@ -193,20 +127,15 @@ public class PivotArmSubsystem extends SubsystemBase{ // Pivot Arm Subsystem
         }
         
         
-       // forceStop(calcSpeed);
         
-        
-        if(calcSpeed > .5){ 
-          calcSpeed = .5;
+        if(calcSpeed > .6){ 
+          calcSpeed = .6;
         }
-        else if(calcSpeed < -0.3){ 
-          calcSpeed = -0.3;
+        else if(calcSpeed < -0.4){ 
+          calcSpeed = -0.4;
         }
         canspark.set(calcSpeed);
 
-        SmartDashboard.putNumber("Pivot Arm Encoder: ", getEncoder()); // Prints out the encoder values
-        SmartDashboard.putBoolean("Limit Switch: ", limitSwitch.get()); // Prints if the limit switch is pressed or not
-        SmartDashboard.putNumber("setpoint PIVOT", setpoint );
-        SmartDashboard.putBoolean("pid", isPIDOn());
+       
     }
 }

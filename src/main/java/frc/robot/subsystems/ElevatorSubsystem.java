@@ -29,7 +29,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     elevator = new CANSparkMax(OperatorConstants.ELEVATOR_ID, MotorType.kBrushless);
     enc = elevator.getEncoder();
     setpoint = enc.getPosition();
-    pid.setTolerance(.05);
   }
 
   public void zeroEncoder(){
